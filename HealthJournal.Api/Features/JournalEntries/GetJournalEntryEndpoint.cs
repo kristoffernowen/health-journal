@@ -1,6 +1,4 @@
-﻿using HealthJournal.Api.Features.JournalEntries.Dtos;
-
-namespace HealthJournal.Api.Features.JournalEntries;
+﻿namespace HealthJournal.Api.Features.JournalEntries;
 
 public static class GetJournalEntryEndpoint
 {
@@ -14,10 +12,12 @@ public static class GetJournalEntryEndpoint
                     return Results.NotFound();
                 }
 
-                return Results.Ok(new OutputJournalEntryDto(journalEntry.Id, journalEntry.Title,
+                return Results.Ok(new OutputGetJournalEntryDto(journalEntry.Id, journalEntry.Title,
                     journalEntry.Content, journalEntry.Date));
             })
             .WithName("GetJournalEntry");
         return group;
     }
 }
+
+public record OutputGetJournalEntryDto(Guid Id, string Title, string Content, DateTime CreatedAt);
