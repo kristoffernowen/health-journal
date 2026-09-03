@@ -9,7 +9,10 @@ public static class GetJournalEntriesEndpoint
     {
         group.MapGet("/", async (DataContext context) =>
             {
-                var journalEntries = await context.JournalEntries.ToListAsync();
+                var user = FakeUserProvider.LoggedInDummy();
+                var journalEntries = await context.JournalEntries.
+                    Where(j => j.UserId == user.Id)
+                    .ToListAsync();
                 var output = journalEntries.Select(j => new OutputJournalEntryDto(j.Id, j.Title, j.Content, j.Date));
                 return Results.Ok(output);
             })

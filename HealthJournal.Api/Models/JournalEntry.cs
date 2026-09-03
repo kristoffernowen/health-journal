@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace HealthJournal.Api
+namespace HealthJournal.Api.Models
 {
-    public class JournalEntry(string title, string content)
+    public class JournalEntry(string title, string content, Guid userId)
     {
         private const int MaxTitleLength = 100;
         private const int MaxContentLength = 1000;
@@ -11,6 +11,7 @@ namespace HealthJournal.Api
         public DateTime Date { get; set; } = DateTime.UtcNow;
         public string Title { get; set; } = ValidateTitle(title);
         public string Content { get; set; } = ValidateContent(content);
+        public Guid UserId { get; set; } = userId;
 
         private static string ValidateTitle(string title)
         {

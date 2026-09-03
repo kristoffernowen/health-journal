@@ -1,4 +1,5 @@
 ﻿using HealthJournal.Api.Features.JournalEntries.Dtos;
+using HealthJournal.Api.Models;
 
 namespace HealthJournal.Api.Features.JournalEntries
 {
@@ -8,7 +9,8 @@ namespace HealthJournal.Api.Features.JournalEntries
         {
             group.MapPost("/", async (DataContext context, InputJournalEntryDto input) =>
                 {
-                    var journalEntry = new JournalEntry(input.Title, input.Content);
+                    var user = FakeUserProvider.LoggedInDummy();
+                    var journalEntry = new JournalEntry(input.Title, input.Content, user.Id);
                     context.JournalEntries.Add(journalEntry);
                     await context.SaveChangesAsync();
                     return Results.Created($"/journal-entries/{journalEntry.Id}",
