@@ -1,4 +1,6 @@
-﻿namespace HealthJournal.Api.Features.JournalEntries;
+﻿using HealthJournal.Api.Infrastructure.Data;
+
+namespace HealthJournal.Api.Features.JournalEntries;
 
 public static class UpdateJournalEntryEndpoint
 {
@@ -13,8 +15,8 @@ public static class UpdateJournalEntryEndpoint
                     return Results.NotFound();
                 }
                 journalEntry.Title = input.Title;
-                journalEntry.Content = input.Content;
-                //journalEntry.UserId = user.Id;
+                journalEntry.Description = input.Content;
+                //journalEntry.UserId = user.WeekAsString;
                 await context.SaveChangesAsync();
                 return Results.NoContent();
             })

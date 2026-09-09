@@ -1,4 +1,6 @@
-﻿namespace HealthJournal.Api.Features.JournalEntries;
+﻿using HealthJournal.Api.Infrastructure.Data;
+
+namespace HealthJournal.Api.Features.JournalEntries;
 
 public static class GetJournalEntryEndpoint
 {
@@ -13,7 +15,7 @@ public static class GetJournalEntryEndpoint
                 }
 
                 return Results.Ok(new OutputGetJournalEntryDto(journalEntry.Id, journalEntry.Title,
-                    journalEntry.Content, journalEntry.Date));
+                    journalEntry.Description, journalEntry.CreatedAt));
             })
             .WithName("GetJournalEntry");
         return group;

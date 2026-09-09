@@ -1,4 +1,6 @@
-﻿namespace HealthJournal.Api.Features.JournalEntries;
+﻿using HealthJournal.Api.Infrastructure.Data;
+
+namespace HealthJournal.Api.Features.JournalEntries;
 
 public static class DeleteJournalEntryEndpoint
 {

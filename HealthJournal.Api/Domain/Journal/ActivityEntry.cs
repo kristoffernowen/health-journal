@@ -1,0 +1,19 @@
+﻿namespace HealthJournal.Api.Domain.Journal
+{
+    public class ActivityEntry : JournalEntryBase
+    {
+        public required DateOnly PerformedAt { get; set; }
+        public override DateOnly Start => PerformedAt;
+        public override DateOnly End => PerformedAt;
+
+        public static ActivityEntry Create(string title, string description, DateOnly performedAt)
+        {
+            return new ActivityEntry
+            {
+                Title = ValidateTitle(title),
+                Description = ValidateDescription(description),
+                PerformedAt = performedAt
+            };
+        }
+    }
+}

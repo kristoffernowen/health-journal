@@ -1,4 +1,4 @@
-﻿using HealthJournal.Api.Models;
+﻿using HealthJournal.Api.Domain.Journal;
 
 namespace HealthJournal.Api
 {
@@ -8,7 +8,7 @@ namespace HealthJournal.Api
         {
             return new User
             {
-                Id = Guid.Parse("00000000-0000-0000-0000-000000000007"),
+                Id = Guid.Parse("6c23bc95-9c5f-4ff6-888c-3b2eccf766f2"),
                 ExtUserId = "dummy-user"
             };
         }
