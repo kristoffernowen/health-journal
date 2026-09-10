@@ -55,11 +55,38 @@ namespace HealthJournal.Api.Migrations
                     b.HasIndex("JournalWeekId")
                         .HasDatabaseName("IX_JournalEntries_JournalWeekId");
 
-                    b.ToTable("JournalEntries", (string)null);
+                    b.ToTable("JournalEntries");
 
                     b.HasDiscriminator<string>("EntryType").HasValue("Base");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("HealthJournal.Api.Domain.Journal.JournalUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ExtUserId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("JournalUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("6c23bc95-9c5f-4ff6-888c-3b2eccf766f2"),
+                            CreatedAt = new DateTime(2026, 9, 9, 12, 10, 10, 0, DateTimeKind.Utc),
+                            ExtUserId = "dummy-user"
+                        });
                 });
 
             modelBuilder.Entity("HealthJournal.Api.Domain.Journal.JournalWeek", b =>
@@ -78,11 +105,11 @@ namespace HealthJournal.Api.Migrations
                     b.Property<DateOnly>("End")
                         .HasColumnType("date");
 
+                    b.Property<Guid>("JournalUserId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateOnly>("Start")
                         .HasColumnType("date");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
 
                     b.ComplexProperty(typeof(Dictionary<string, object>), "WeekOfYear", "HealthJournal.Api.Domain.Journal.JournalWeek.WeekOfYear#WeekOfYear", b1 =>
                         {
@@ -97,37 +124,10 @@ namespace HealthJournal.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId", "Start")
-                        .HasDatabaseName("IX_JournalWeeks_UserId_WeekOfYear");
+                    b.HasIndex("JournalUserId", "Start")
+                        .HasDatabaseName("IX_JournalWeeks_JournalUserId_WeekOfYear");
 
-                    b.ToTable("JournalWeeks", (string)null);
-                });
-
-            modelBuilder.Entity("HealthJournal.Api.Domain.Journal.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("ExtUserId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("6c23bc95-9c5f-4ff6-888c-3b2eccf766f2"),
-                            CreatedAt = new DateTime(2026, 9, 9, 12, 10, 10, 0, DateTimeKind.Utc),
-                            ExtUserId = "dummy-user"
-                        });
+                    b.ToTable("JournalWeeks");
                 });
 
             modelBuilder.Entity("HealthJournal.Api.Domain.Journal.ActivityEntry", b =>
@@ -153,23 +153,23 @@ namespace HealthJournal.Api.Migrations
 
             modelBuilder.Entity("HealthJournal.Api.Domain.Journal.JournalWeek", b =>
                 {
-                    b.HasOne("HealthJournal.Api.Domain.Journal.User", "User")
+                    b.HasOne("HealthJournal.Api.Domain.Journal.JournalUser", "JournalUser")
                         .WithMany("JournalWeeks")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("JournalUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("JournalUser");
+                });
+
+            modelBuilder.Entity("HealthJournal.Api.Domain.Journal.JournalUser", b =>
+                {
+                    b.Navigation("JournalWeeks");
                 });
 
             modelBuilder.Entity("HealthJournal.Api.Domain.Journal.JournalWeek", b =>
                 {
                     b.Navigation("Entries");
-                });
-
-            modelBuilder.Entity("HealthJournal.Api.Domain.Journal.User", b =>
-                {
-                    b.Navigation("JournalWeeks");
                 });
 #pragma warning restore 612, 618
         }

@@ -16,7 +16,7 @@ namespace HealthJournal.Api.Infrastructure.Data.Configurations
                 .WithOne(e => e.JournalWeek)
                 .HasForeignKey(e => e.JournalWeekId)
                 .OnDelete(DeleteBehavior.Cascade);
-            builder.HasIndex(j => new { j.UserId, j.Start }).HasDatabaseName("IX_JournalWeeks_UserId_WeekOfYear");
+            builder.HasIndex(j => new { j.JournalUserId, j.Start }).HasDatabaseName("IX_JournalWeeks_JournalUserId_WeekOfYear");
         }
     }
 }

@@ -12,7 +12,7 @@ namespace HealthJournal.Api.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "JournalUsers",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -21,7 +21,7 @@ namespace HealthJournal.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_JournalUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -32,7 +32,7 @@ namespace HealthJournal.Api.Migrations
                     Start = table.Column<DateOnly>(type: "date", nullable: false),
                     End = table.Column<DateOnly>(type: "date", nullable: false),
                     Description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    JournalUserId = table.Column<Guid>(type: "uuid", nullable: false),
                     WeekOfYear_Week = table.Column<int>(type: "integer", nullable: false),
                     WeekOfYear_Year = table.Column<int>(type: "integer", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
@@ -41,9 +41,9 @@ namespace HealthJournal.Api.Migrations
                 {
                     table.PrimaryKey("PK_JournalWeeks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_JournalWeeks_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
+                        name: "FK_JournalWeeks_JournalUsers_JournalUserId",
+                        column: x => x.JournalUserId,
+                        principalTable: "JournalUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -72,7 +72,7 @@ namespace HealthJournal.Api.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Users",
+                table: "JournalUsers",
                 columns: new[] { "Id", "CreatedAt", "ExtUserId" },
                 values: new object[] { new Guid("6c23bc95-9c5f-4ff6-888c-3b2eccf766f2"), new DateTime(2026, 9, 9, 12, 10, 10, 0, DateTimeKind.Utc), "dummy-user" });
 
@@ -82,9 +82,9 @@ namespace HealthJournal.Api.Migrations
                 column: "JournalWeekId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_JournalWeeks_UserId_WeekOfYear",
+                name: "IX_JournalWeeks_JournalUserId_WeekOfYear",
                 table: "JournalWeeks",
-                columns: new[] { "UserId", "Start" });
+                columns: new[] { "JournalUserId", "Start" });
         }
 
         /// <inheritdoc />
@@ -97,7 +97,7 @@ namespace HealthJournal.Api.Migrations
                 name: "JournalWeeks");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "JournalUsers");
         }
     }
 }

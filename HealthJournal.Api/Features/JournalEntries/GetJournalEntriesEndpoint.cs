@@ -10,7 +10,7 @@ public static class GetJournalEntriesEndpoint
         group.MapGet("/", async (DataContext context) =>
             {
                 var user = FakeUserProvider.LoggedInDummy();
-                var journalEntries = await context.Users.Include(u => u.JournalWeeks)
+                var journalEntries = await context.JournalUsers.Include(u => u.JournalWeeks)
                     .ThenInclude(jw => jw.Entries)
                     .Where(u => u.Id == user.Id)
                     .SelectMany(u => u.JournalWeeks)

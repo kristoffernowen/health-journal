@@ -10,8 +10,8 @@ public class JournalWeek : EntityBase
     public required DateOnly End { get; set; }
     public string? Description { get; private set; }
     public List<JournalEntryBase> Entries { get; set; } = new List<JournalEntryBase>();
-    public User User { get; set; } = null!;
-    public Guid UserId { get; set; }
+    public JournalUser JournalUser { get; set; } = null!;
+    public Guid JournalUserId { get; set; }
 
     public static JournalWeek Create(WeekOfYear weekOfYear, string? description)
     {

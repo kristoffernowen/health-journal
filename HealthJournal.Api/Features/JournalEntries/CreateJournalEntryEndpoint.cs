@@ -11,7 +11,7 @@ namespace HealthJournal.Api.Features.JournalEntries
             group.MapPost("/", async (DataContext context, InputCreateJournalEntryDto input) =>
                 {
                     var fakeUser = FakeUserProvider.LoggedInDummy();
-                    var user = await context.Users
+                    var user = await context.JournalUsers
                         .Include(u => u.JournalWeeks)
                             .ThenInclude(jw => jw.Entries)
                         .FirstOrDefaultAsync(u => u.Id == fakeUser.Id);

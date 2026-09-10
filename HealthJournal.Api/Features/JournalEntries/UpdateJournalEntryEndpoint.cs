@@ -16,7 +16,7 @@ public static class UpdateJournalEntryEndpoint
                 }
                 journalEntry.Title = input.Title;
                 journalEntry.Description = input.Content;
-                //journalEntry.UserId = user.WeekAsString;
+                //journalEntry.JournalUserId = user.WeekAsString;
                 await context.SaveChangesAsync();
                 return Results.NoContent();
             })

@@ -3,7 +3,7 @@ using HealthJournal.Api.Domain.Journal.ValueObjects;
 
 namespace HealthJournal.Api.Domain.Journal
 {
-    public class User : EntityBase
+    public class JournalUser : EntityBase
     {
         public string ExtUserId { get; set; } = string.Empty;
         public List<JournalWeek> JournalWeeks { get; set; } = new List<JournalWeek>();
@@ -16,8 +16,8 @@ namespace HealthJournal.Api.Domain.Journal
                 return existing;
             }
             var journalWeek = JournalWeek.Create(week, null);
-            journalWeek.User = this;
-            journalWeek.UserId = Id;
+            journalWeek.JournalUser = this;
+            journalWeek.JournalUserId = Id;
             JournalWeeks.Add(journalWeek);
             return journalWeek;
         }
