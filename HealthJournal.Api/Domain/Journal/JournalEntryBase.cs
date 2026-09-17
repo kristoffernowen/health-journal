@@ -16,21 +16,37 @@ namespace HealthJournal.Api.Domain.Journal
         protected static string ValidateTitle(string title)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(title);
-            if(title.Length > MaxTitleLength)
+            return title.Length switch
             {
-                throw new ArgumentException($"Title cannot be longer than {MaxTitleLength} characters.");
-            }
-            return title;
+                < 3 => throw new ArgumentException("Title must be at least 3 characters long."),
+                > MaxTitleLength => throw new ArgumentException(
+                    $"Title cannot be longer than {MaxTitleLength} characters."),
+                _ => title
+            };
         }
 
         protected static string ValidateDescription(string description)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(description);
-            if(description.Length > MaxContentLength)
+            return description.Length switch
             {
-                throw new ArgumentException($"Description cannot be longer than {MaxContentLength} characters.");
+                < 3 => throw new ArgumentException("Description must be at least 3 characters long."),
+                > MaxContentLength => throw new ArgumentException(
+                    $"Description cannot be longer than {MaxContentLength} characters."),
+                _ => description
+            };
+        }
+        // later I can put Domain in its own project and use internal for the Update method so that it can only be called from within the Domain project
+        public virtual void Update(string? title, string? description, DateOnly? start, DateOnly? end)
+        {
+            if (title != null)
+            {
+                Title = ValidateTitle(title);
             }
-            return description;
+            if (description != null)
+            {
+                Description = ValidateDescription(description);
+            }
         }
     }
 }

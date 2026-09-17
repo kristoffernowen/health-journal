@@ -14,9 +14,7 @@ namespace HealthJournal.Api.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new JournalUserConfiguration());
-            modelBuilder.ApplyConfiguration(new JournalWeekConfiguration());
-            modelBuilder.ApplyConfiguration(new JournalEntryBaseConfiguration());
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
         }
     }
 }

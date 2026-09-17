@@ -55,7 +55,7 @@ namespace HealthJournal.Api.Migrations
                     b.HasIndex("JournalWeekId")
                         .HasDatabaseName("IX_JournalEntries_JournalWeekId");
 
-                    b.ToTable("JournalEntries");
+                    b.ToTable("JournalEntries", (string)null);
 
                     b.HasDiscriminator<string>("EntryType").HasValue("Base");
 
@@ -78,7 +78,7 @@ namespace HealthJournal.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("JournalUsers");
+                    b.ToTable("JournalUsers", (string)null);
 
                     b.HasData(
                         new
@@ -127,7 +127,7 @@ namespace HealthJournal.Api.Migrations
                     b.HasIndex("JournalUserId", "Start")
                         .HasDatabaseName("IX_JournalWeeks_JournalUserId_WeekOfYear");
 
-                    b.ToTable("JournalWeeks");
+                    b.ToTable("JournalWeeks", (string)null);
                 });
 
             modelBuilder.Entity("HealthJournal.Api.Domain.Journal.ActivityEntry", b =>

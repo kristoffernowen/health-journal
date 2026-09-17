@@ -14,12 +14,19 @@ public static class GetJournalEntryEndpoint
                     return Results.NotFound();
                 }
 
-                return Results.Ok(new OutputGetJournalEntryDto(journalEntry.Id, journalEntry.Title,
-                    journalEntry.Description, journalEntry.CreatedAt));
+                return Results.Ok(
+                    new OutputGetJournalEntryDto(
+                        journalEntry.Id, 
+                        journalEntry.Title,
+                        journalEntry.Description, 
+                        journalEntry.Start, 
+                        journalEntry.End, 
+                        journalEntry.GetType().Name, 
+                        journalEntry.CreatedAt));
             })
             .WithName("GetJournalEntry");
         return group;
     }
 }
 
-public record OutputGetJournalEntryDto(Guid Id, string Title, string Content, DateTime CreatedAt);
+public record OutputGetJournalEntryDto(Guid Id, string Title, string Description, DateOnly Start, DateOnly End, string Type, DateTime CreatedAt);

@@ -15,5 +15,15 @@
                 PerformedAt = performedAt
             };
         }
+
+        public override void Update(string? title, string? description, DateOnly? start, DateOnly? end)
+        {
+            if (start != end)
+            {
+                throw new ArgumentException("For ActivityEntry, start and end dates must be the same.");
+            }
+            base.Update(title, description, null, null);
+            PerformedAt = start ?? PerformedAt;
+        }
     }
 }

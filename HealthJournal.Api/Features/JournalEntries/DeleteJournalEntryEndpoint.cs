@@ -1,4 +1,5 @@
 ﻿using HealthJournal.Api.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace HealthJournal.Api.Features.JournalEntries;
 
@@ -8,12 +9,14 @@ public static class DeleteJournalEntryEndpoint
     {
         group.MapDelete("/{id:guid}", async (DataContext context, Guid id) =>
             {
-                var journalEntry = await context.JournalEntries.FindAsync(id);
-                if (journalEntry == null)
-                {
-                    return Results.NotFound();
-                }
-                context.JournalEntries.Remove(journalEntry);
+                var fakeUser = FakeUserProvider.LoggedInDummy();
+                var user = await context.JournalUsers
+                    .Include(u => u.JournalWeeks)
+                    .ThenInclude(jw => jw.Entries)
+                    .FirstAsync(u => u.ExtUserId == fakeUser.ExtUserId);
+
+                user.RemoveEntry(id);
+
                 await context.SaveChangesAsync();
                 return Results.NoContent();
             })

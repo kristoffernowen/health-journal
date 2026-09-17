@@ -16,7 +16,8 @@ public static class GetJournalEntriesEndpoint
                     .SelectMany(u => u.JournalWeeks)
                     .SelectMany(jw => jw.Entries)
                     .ToListAsync();
-                var output = journalEntries.Select(j => new OutputGetJournalEntriesDto(j.Id, j.Title, j.Description, j.CreatedAt));
+                var output = journalEntries.Select(
+                    j => new OutputGetJournalEntriesDto(j.Id, j.Title, j.Description, j.GetType().Name, j.CreatedAt));
                 return Results.Ok(output);
             })
             .WithName("GetJournalEntries");
@@ -24,5 +25,5 @@ public static class GetJournalEntriesEndpoint
     }
 }
 
-public record OutputGetJournalEntriesDto(Guid Id, string Title, string Description, DateTime CreatedAt
+public record OutputGetJournalEntriesDto(Guid Id, string Title, string Description, string Type, DateTime CreatedAt
 );
