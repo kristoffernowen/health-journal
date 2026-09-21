@@ -1,3 +1,4 @@
+using FluentValidation;
 using HealthJournal.Api.Features.JournalEntries;
 using HealthJournal.Api.Features.JournalEntries.ActivityEntries;
 using HealthJournal.Api.Features.JournalWeeks;
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<DataContext>(opt =>
         .LogTo(Console.WriteLine, LogLevel.Information)
         .EnableSensitiveDataLogging());
 // remove sensitive data logging in production
+
+builder.Services.AddValidatorsFromAssemblyContaining<CreateActivityEntryValidator>(ServiceLifetime.Transient);
 
 builder.Services.AddOpenApi();
 var app = builder.Build();

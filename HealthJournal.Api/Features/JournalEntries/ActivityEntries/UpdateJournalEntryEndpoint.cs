@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using FluentValidation;
 using HealthJournal.Api.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,8 +9,14 @@ public static class UpdateActivityEntryEndpoint
 {
     public static RouteGroupBuilder MapUpdateActivityEntry(this RouteGroupBuilder group)
     {
-        group.MapPatch("/{id:guid}", async (DataContext context, Guid id, InputUpdateActivityEntryDto input) =>
+        group.MapPatch("/{id:guid}", async (DataContext context, IValidator<InputUpdateActivityEntryDto> validator, Guid id, InputUpdateActivityEntryDto input) =>
             {
+                var validationResult = await validator.ValidateAsync(input);
+                if (!validationResult.IsValid)
+                {
+                    return Results.ValidationProblem(validationResult.ToDictionary());
+                }
+
                 var fakeUser = FakeUserProvider.LoggedInDummy();
                 var user = await context.JournalUsers
                     .Include(u => u.JournalWeeks)
@@ -30,3 +37,16 @@ public static class UpdateActivityEntryEndpoint
 }
 
 public record InputUpdateActivityEntryDto(string? Title, string? Description, DateOnly? PerformedAt);
+
+public class UpdateActivityEntryValidator : AbstractValidator<InputUpdateActivityEntryDto>
+{
+    public UpdateActivityEntryValidator()
+    {
+        RuleFor(x => x.Title)
+            .MaximumLength(100).WithMessage("Title cannot exceed 100 characters.");
+        RuleFor(x => x.Description)
+            .MaximumLength(1000).WithMessage("Description cannot exceed 1000 characters.");
+        RuleFor(x => x.PerformedAt)
+            .LessThanOrEqualTo(_ => DateOnly.FromDateTime(DateTime.Now)).WithMessage("Performed date cannot be in the future.");
+    }
+}
