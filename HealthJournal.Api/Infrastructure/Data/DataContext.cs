@@ -1,4 +1,3 @@
-﻿// Global usings consolidated in GlobalUsings.cs
 namespace HealthJournal.Api.Infrastructure.Data;
 
 public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)

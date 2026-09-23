@@ -1,4 +1,3 @@
-﻿// Global usings consolidated in GlobalUsings.cs
 using System.Diagnostics;
 
 namespace HealthJournal.Api.Features.JournalEntries.ActivityEntries;
@@ -10,8 +9,8 @@ public static class UpdateActivityEntryEndpoint
         group.MapPatch("/{id:guid}", async (
                 DataContext context,
                 ILoggerFactory loggerFactory,
-                IValidator<InputUpdateActivityEntryDto> validator, 
-                Guid id, 
+                IValidator<InputUpdateActivityEntryDto> validator,
+                Guid id,
                 InputUpdateActivityEntryDto input) =>
             {
                 var logger = loggerFactory.CreateLogger("UpdateActivityEntryEndpoint");
@@ -36,7 +35,7 @@ public static class UpdateActivityEntryEndpoint
                 await context.SaveChangesAsync();
 
                 logger.LogInformation("Updated activity entry with ID {Id}", id);
-                
+
                 return Results.NoContent();
             })
             .WithName("UpdateJournalEntry");

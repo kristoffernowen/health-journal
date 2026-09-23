@@ -1,4 +1,4 @@
-﻿namespace HealthJournal.Api.Domain.Journal;
+namespace HealthJournal.Api.Domain.Journal;
 
 public class ActivityEntry : JournalEntryBase
 {

@@ -1,4 +1,3 @@
-﻿// Global usings consolidated in GlobalUsings.cs
 namespace HealthJournal.Api.Features.JournalEntries;
 
 public static class GetJournalEntriesEndpoint

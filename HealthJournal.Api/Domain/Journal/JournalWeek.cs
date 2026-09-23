@@ -1,9 +1,6 @@
-﻿using HealthJournal.Api.Domain.Journal.Base;
-using HealthJournal.Api.Domain.Journal.ValueObjects;
-
 namespace HealthJournal.Api.Domain.Journal;
 
-public class JournalWeek : EntityBase 
+public class JournalWeek : EntityBase
 {
     public required WeekOfYear WeekOfYear { get; set; }
     public required DateOnly Start { get; set; }
@@ -48,7 +45,7 @@ public class JournalWeek : EntityBase
         {
             throw new ArgumentException("Entry not found in the week.");
         }
-        
+
         if (start.HasValue && !WeekOfYear.Contains(start.Value))
         {
             throw new ArgumentException("Start date is not within the week.");

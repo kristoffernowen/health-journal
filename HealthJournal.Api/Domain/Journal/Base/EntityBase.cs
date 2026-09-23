@@ -1,4 +1,4 @@
-﻿namespace HealthJournal.Api.Domain.Journal.Base;
+namespace HealthJournal.Api.Domain.Journal.Base;
 
 public class EntityBase
 {

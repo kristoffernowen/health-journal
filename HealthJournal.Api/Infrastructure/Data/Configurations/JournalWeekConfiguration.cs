@@ -1,4 +1,3 @@
-ï»¿// Global usings consolidated in GlobalUsings.cs
 namespace HealthJournal.Api.Infrastructure.Data.Configurations;
 
 public class JournalWeekConfiguration : IEntityTypeConfiguration<JournalWeek>
@@ -7,7 +6,7 @@ public class JournalWeekConfiguration : IEntityTypeConfiguration<JournalWeek>
     {
         builder.HasKey(j => j.Id);
         builder.Property(j => j.Description).HasMaxLength(1000);
-        builder.ComplexProperty(j => j.WeekOfYear); // Sic! Detta fungerar copilot - du har inte lÃ¤rt dig det Ã¤n bara
+        builder.ComplexProperty(j => j.WeekOfYear); // Sic! Detta fungerar copilot - du har inte lärt dig det än bara
 
         builder.HasMany(j => j.Entries)
             .WithOne(e => e.JournalWeek)

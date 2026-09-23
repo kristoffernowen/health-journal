@@ -1,4 +1,3 @@
-﻿// Global usings consolidated in GlobalUsings.cs
 namespace HealthJournal.Api.Domain.Journal;
 
 public class JournalUser : EntityBase

@@ -1,67 +1,67 @@
-﻿// Global usings consolidated in GlobalUsings.cs
 namespace HealthJournal.Api.Features.JournalEntries.ActivityEntries;
-    public static class CreateActivityEntryEndpoint
+
+public static class CreateActivityEntryEndpoint
+{
+    public static RouteGroupBuilder MapCreateActivityEntry(this RouteGroupBuilder group)
     {
-        public static RouteGroupBuilder MapCreateActivityEntry(this RouteGroupBuilder group)
-        {
-            group.MapPost("/activity", async (
-                    DataContext context, 
-                    ILoggerFactory loggerFactory, 
-                    IValidator<InputCreateActivityEntryDto> validator, 
-                    InputCreateActivityEntryDto input) =>
+        group.MapPost("/activity", async (
+                DataContext context,
+                ILoggerFactory loggerFactory,
+                IValidator<InputCreateActivityEntryDto> validator,
+                InputCreateActivityEntryDto input) =>
+            {
+                var logger = loggerFactory.CreateLogger("CreateActivityEntryEndpoint");
+
+                var validationResult = await validator.ValidateAsync(input);
+                if (!validationResult.IsValid)
                 {
-                    var logger = loggerFactory.CreateLogger("CreateActivityEntryEndpoint");
+                    return Results.ValidationProblem(validationResult.ToDictionary());
+                }
 
-                    var validationResult = await validator.ValidateAsync(input);
-                    if (!validationResult.IsValid)
-                    {
-                        return Results.ValidationProblem(validationResult.ToDictionary());
-                    }
+                var fakeUser = FakeUserProvider.LoggedInDummy();
+                var user = await context.JournalUsers
+                    .Include(u => u.JournalWeeks)
+                    .ThenInclude(jw => jw.Entries)
+                    .AsSplitQuery()
+                    .FirstOrDefaultAsync(u => u.Id == fakeUser.Id);
 
-                    var fakeUser = FakeUserProvider.LoggedInDummy();
-                    var user = await context.JournalUsers
-                        .Include(u => u.JournalWeeks)
-                        .ThenInclude(jw => jw.Entries)
-                        .AsSplitQuery()
-                        .FirstOrDefaultAsync(u => u.Id == fakeUser.Id);
+                if (user == null)
+                {
+                    return Results.NotFound();
+                }
 
-                    if (user == null)
-                    {
-                        return Results.NotFound();
-                    }
+                var journalEntry = ActivityEntry.Create(input.Title, input.Description, input.PerformedAt);
+                user.AddEntry(journalEntry);
 
-                    var journalEntry = ActivityEntry.Create(input.Title, input.Description, input.PerformedAt);
-                    user.AddEntry(journalEntry);
+                context.ActivityEntries.Add(journalEntry);
+                await context.SaveChangesAsync();
 
-                    context.ActivityEntries.Add(journalEntry);
-                    await context.SaveChangesAsync();
-                    
-                    logger.LogInformation("Created activity entry with ID {JournalEntryId}", journalEntry.Id);
+                logger.LogInformation("Created activity entry with ID {JournalEntryId}", journalEntry.Id);
 
-                    return Results.Created($"/journal-entries/{journalEntry.Id}",
-                        new OutputCreateActivityEntryDto(journalEntry.Id, journalEntry.Title, journalEntry.Description,
-                            journalEntry.CreatedAt, journalEntry.PerformedAt));
-                })
-                .WithName("CreateJournalEntry");
-            return group;
-        }
+                return Results.Created($"/journal-entries/{journalEntry.Id}",
+                    new OutputCreateActivityEntryDto(journalEntry.Id, journalEntry.Title, journalEntry.Description,
+                        journalEntry.CreatedAt, journalEntry.PerformedAt));
+            })
+            .WithName("CreateJournalEntry");
+        return group;
     }
+}
 
-    public record OutputCreateActivityEntryDto(Guid Id, string Title, string Description, DateTime CreatedAt, DateOnly PerformedAt);
+public record OutputCreateActivityEntryDto(Guid Id, string Title, string Description, DateTime CreatedAt, DateOnly PerformedAt);
 
-    public record InputCreateActivityEntryDto(string Title, string Description, DateOnly PerformedAt);
+public record InputCreateActivityEntryDto(string Title, string Description, DateOnly PerformedAt);
 
-    public class CreateActivityEntryValidator : AbstractValidator<InputCreateActivityEntryDto>
+public class CreateActivityEntryValidator : AbstractValidator<InputCreateActivityEntryDto>
+{
+    public CreateActivityEntryValidator()
     {
-        public CreateActivityEntryValidator()
-        {
-            RuleFor(x => x.Title)
-                .NotEmpty().WithMessage("Title is required.")
-                .MaximumLength(100).WithMessage("Title cannot exceed 100 characters.");
-            RuleFor(x => x.Description)
-                .NotEmpty().WithMessage("Description is required.")
-                .MaximumLength(1000).WithMessage("Description cannot exceed 1000 characters.");
-            RuleFor(x => x.PerformedAt)
-                .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.Now)).WithMessage("Performed date cannot be in the future.");
-        }
+        RuleFor(x => x.Title)
+            .NotEmpty().WithMessage("Title is required.")
+            .MaximumLength(100).WithMessage("Title cannot exceed 100 characters.");
+        RuleFor(x => x.Description)
+            .NotEmpty().WithMessage("Description is required.")
+            .MaximumLength(1000).WithMessage("Description cannot exceed 1000 characters.");
+        RuleFor(x => x.PerformedAt)
+            .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.Now)).WithMessage("Performed date cannot be in the future.");
     }
+}

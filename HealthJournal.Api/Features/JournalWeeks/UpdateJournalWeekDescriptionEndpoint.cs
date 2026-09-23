@@ -1,4 +1,3 @@
-﻿// Global usings consolidated in GlobalUsings.cs
 namespace HealthJournal.Api.Features.JournalWeeks;
 
 public static class UpdateJournalWeekDescriptionEndpoint

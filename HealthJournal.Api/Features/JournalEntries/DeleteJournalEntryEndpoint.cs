@@ -1,4 +1,3 @@
-﻿// Global usings consolidated in GlobalUsings.cs
 namespace HealthJournal.Api.Features.JournalEntries;
 
 public static class DeleteJournalEntryEndpoint
@@ -6,8 +5,8 @@ public static class DeleteJournalEntryEndpoint
     public static RouteGroupBuilder MapDeleteJournalEntry(this RouteGroupBuilder group)
     {
         group.MapDelete("/{id:guid}", async (
-                DataContext context, 
-                ILoggerFactory loggerFactory, 
+                DataContext context,
+                ILoggerFactory loggerFactory,
                 Guid id) =>
             {
                 var logger = loggerFactory.CreateLogger("DeleteJournalEntryEndpoint");
@@ -22,7 +21,7 @@ public static class DeleteJournalEntryEndpoint
                 await context.SaveChangesAsync();
 
                 logger.LogInformation("Deleted activity entry with ID {Id}", id);
-                
+
                 return Results.NoContent();
             })
             .WithName("DeleteJournalEntry");

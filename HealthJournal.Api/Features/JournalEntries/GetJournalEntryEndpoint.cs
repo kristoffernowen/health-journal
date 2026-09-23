@@ -1,4 +1,3 @@
-﻿// Global usings consolidated in GlobalUsings.cs
 namespace HealthJournal.Api.Features.JournalEntries;
 
 public static class GetJournalEntryEndpoint
@@ -15,12 +14,12 @@ public static class GetJournalEntryEndpoint
 
                 return Results.Ok(
                     new OutputGetJournalEntryDto(
-                        journalEntry.Id, 
+                        journalEntry.Id,
                         journalEntry.Title,
-                        journalEntry.Description, 
-                        journalEntry.Start, 
-                        journalEntry.End, 
-                        journalEntry.GetType().Name, 
+                        journalEntry.Description,
+                        journalEntry.Start,
+                        journalEntry.End,
+                        journalEntry.GetType().Name,
                         journalEntry.CreatedAt));
             })
             .WithName("GetJournalEntry");

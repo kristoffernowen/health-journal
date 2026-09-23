@@ -1,4 +1,3 @@
-// Global usings consolidated in GlobalUsings.cs
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -10,7 +9,7 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Services.AddSerilog((lc) =>lc
+    builder.Services.AddSerilog((lc) => lc
         .ReadFrom.Configuration(builder.Configuration)
         ); // using ILoggerFactory in endpoints till handlers are in place
 

@@ -1,4 +1,4 @@
-﻿namespace HealthJournal.Api.Domain.Journal.ValueObjects;
+namespace HealthJournal.Api.Domain.Journal.ValueObjects;
 
 public readonly record struct WeekOfYear(int Year, int Week)
 {

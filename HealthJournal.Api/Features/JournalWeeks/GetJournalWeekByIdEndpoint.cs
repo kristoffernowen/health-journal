@@ -1,8 +1,3 @@
-﻿using HealthJournal.Api.Domain.Journal;
-using HealthJournal.Api.Domain.Journal.ValueObjects;
-using HealthJournal.Api.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-
 namespace HealthJournal.Api.Features.JournalWeeks;
 
 public static class GetJournalWeekByIdEndpoint
