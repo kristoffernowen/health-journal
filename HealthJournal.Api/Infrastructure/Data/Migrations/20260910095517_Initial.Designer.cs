@@ -10,15 +10,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace HealthJournal.Api.Migrations
+namespace HealthJournal.Api.Migrations;
+
+[DbContext(typeof(DataContext))]
+[Migration("20260910095517_Initial")]
+partial class Initial
 {
-    [DbContext(typeof(DataContext))]
-    [Migration("20260910095517_Initial")]
-    partial class Initial
+    /// <inheritdoc />
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "10.0.11")
@@ -177,4 +177,3 @@ namespace HealthJournal.Api.Migrations
 #pragma warning restore 612, 618
         }
     }
-}

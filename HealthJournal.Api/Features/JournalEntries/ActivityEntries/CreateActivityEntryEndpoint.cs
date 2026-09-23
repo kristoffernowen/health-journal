@@ -1,10 +1,5 @@
-﻿using FluentValidation;
-using HealthJournal.Api.Domain.Journal;
-using HealthJournal.Api.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-
-namespace HealthJournal.Api.Features.JournalEntries.ActivityEntries
-{
+﻿// Global usings consolidated in GlobalUsings.cs
+namespace HealthJournal.Api.Features.JournalEntries.ActivityEntries;
     public static class CreateActivityEntryEndpoint
     {
         public static RouteGroupBuilder MapCreateActivityEntry(this RouteGroupBuilder group)
@@ -70,4 +65,3 @@ namespace HealthJournal.Api.Features.JournalEntries.ActivityEntries
                 .LessThanOrEqualTo(DateOnly.FromDateTime(DateTime.Now)).WithMessage("Performed date cannot be in the future.");
         }
     }
-}

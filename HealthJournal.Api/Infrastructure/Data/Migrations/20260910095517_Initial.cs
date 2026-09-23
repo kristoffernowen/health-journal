@@ -3,14 +3,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace HealthJournal.Api.Migrations
+namespace HealthJournal.Api.Migrations;
+
+/// <inheritdoc />
+public partial class Initial : Migration
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    protected override void Up(MigrationBuilder migrationBuilder)
     {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
             migrationBuilder.CreateTable(
                 name: "JournalUsers",
                 columns: table => new
@@ -100,4 +100,3 @@ namespace HealthJournal.Api.Migrations
                 name: "JournalUsers");
         }
     }
-}

@@ -1,0 +1,14 @@
+# Top-most EditorConfig file
+root = true
+
+[*.{cs}]
+charset = utf-8
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+
+# Prefer file-scoped namespace declarations for new C# files
+# Options: file_scoped, block
+csharp_style_namespace_declarations = file_scoped:suggestion
+# Back-compat key (some tools respect this setting)
+dotnet_style_prefer_file_scoped_namespace = true:suggestion

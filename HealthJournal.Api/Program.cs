@@ -1,10 +1,4 @@
-using FluentValidation;
-using HealthJournal.Api.Features.JournalEntries;
-using HealthJournal.Api.Features.JournalEntries.ActivityEntries;
-using HealthJournal.Api.Features.JournalWeeks;
-using HealthJournal.Api.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using Serilog;
+// Global usings consolidated in GlobalUsings.cs
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()

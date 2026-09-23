@@ -1,6 +1,4 @@
-﻿using HealthJournal.Api.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-
+﻿// Global usings consolidated in GlobalUsings.cs
 namespace HealthJournal.Api.Features.JournalEntries;
 
 public static class DeleteJournalEntryEndpoint

@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-using FluentValidation;
-using HealthJournal.Api.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+﻿// Global usings consolidated in GlobalUsings.cs
+using System.Diagnostics;
 
 namespace HealthJournal.Api.Features.JournalEntries.ActivityEntries;
 
