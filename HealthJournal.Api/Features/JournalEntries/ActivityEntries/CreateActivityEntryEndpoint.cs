@@ -9,8 +9,14 @@ namespace HealthJournal.Api.Features.JournalEntries.ActivityEntries
     {
         public static RouteGroupBuilder MapCreateActivityEntry(this RouteGroupBuilder group)
         {
-            group.MapPost("/activity", async (DataContext context, IValidator<InputCreateActivityEntryDto> validator, InputCreateActivityEntryDto input) =>
+            group.MapPost("/activity", async (
+                    DataContext context, 
+                    ILoggerFactory loggerFactory, 
+                    IValidator<InputCreateActivityEntryDto> validator, 
+                    InputCreateActivityEntryDto input) =>
                 {
+                    var logger = loggerFactory.CreateLogger("CreateActivityEntryEndpoint");
+
                     var validationResult = await validator.ValidateAsync(input);
                     if (!validationResult.IsValid)
                     {
@@ -21,6 +27,7 @@ namespace HealthJournal.Api.Features.JournalEntries.ActivityEntries
                     var user = await context.JournalUsers
                         .Include(u => u.JournalWeeks)
                         .ThenInclude(jw => jw.Entries)
+                        .AsSplitQuery()
                         .FirstOrDefaultAsync(u => u.Id == fakeUser.Id);
 
                     if (user == null)
@@ -33,6 +40,8 @@ namespace HealthJournal.Api.Features.JournalEntries.ActivityEntries
 
                     context.ActivityEntries.Add(journalEntry);
                     await context.SaveChangesAsync();
+                    
+                    logger.LogInformation("Created activity entry with ID {JournalEntryId}", journalEntry.Id);
 
                     return Results.Created($"/journal-entries/{journalEntry.Id}",
                         new OutputCreateActivityEntryDto(journalEntry.Id, journalEntry.Title, journalEntry.Description,

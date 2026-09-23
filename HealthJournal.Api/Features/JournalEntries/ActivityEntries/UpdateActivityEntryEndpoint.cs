@@ -9,8 +9,15 @@ public static class UpdateActivityEntryEndpoint
 {
     public static RouteGroupBuilder MapUpdateActivityEntry(this RouteGroupBuilder group)
     {
-        group.MapPatch("/{id:guid}", async (DataContext context, IValidator<InputUpdateActivityEntryDto> validator, Guid id, InputUpdateActivityEntryDto input) =>
+        group.MapPatch("/{id:guid}", async (
+                DataContext context,
+                ILoggerFactory loggerFactory,
+                IValidator<InputUpdateActivityEntryDto> validator, 
+                Guid id, 
+                InputUpdateActivityEntryDto input) =>
             {
+                var logger = loggerFactory.CreateLogger("UpdateActivityEntryEndpoint");
+
                 var validationResult = await validator.ValidateAsync(input);
                 if (!validationResult.IsValid)
                 {
@@ -21,6 +28,7 @@ public static class UpdateActivityEntryEndpoint
                 var user = await context.JournalUsers
                     .Include(u => u.JournalWeeks)
                     .ThenInclude(jw => jw.Entries)
+                    .AsSplitQuery()
                     .FirstOrDefaultAsync(u => u.ExtUserId == fakeUser.ExtUserId);
 
                 Debug.Assert(user != null, nameof(user) + " != null");
@@ -28,6 +36,8 @@ public static class UpdateActivityEntryEndpoint
 
                 context.JournalUsers.Update(user);
                 await context.SaveChangesAsync();
+
+                logger.LogInformation("Updated activity entry with ID {Id}", id);
                 
                 return Results.NoContent();
             })

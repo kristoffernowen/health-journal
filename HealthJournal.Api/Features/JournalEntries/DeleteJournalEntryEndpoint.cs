@@ -7,8 +7,12 @@ public static class DeleteJournalEntryEndpoint
 {
     public static RouteGroupBuilder MapDeleteJournalEntry(this RouteGroupBuilder group)
     {
-        group.MapDelete("/{id:guid}", async (DataContext context, Guid id) =>
+        group.MapDelete("/{id:guid}", async (
+                DataContext context, 
+                ILoggerFactory loggerFactory, 
+                Guid id) =>
             {
+                var logger = loggerFactory.CreateLogger("DeleteJournalEntryEndpoint");
                 var fakeUser = FakeUserProvider.LoggedInDummy();
                 var user = await context.JournalUsers
                     .Include(u => u.JournalWeeks)
@@ -18,6 +22,9 @@ public static class DeleteJournalEntryEndpoint
                 user.RemoveEntry(id);
 
                 await context.SaveChangesAsync();
+
+                logger.LogInformation("Deleted activity entry with ID {Id}", id);
+                
                 return Results.NoContent();
             })
             .WithName("DeleteJournalEntry");

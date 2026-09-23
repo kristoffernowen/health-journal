@@ -8,8 +8,15 @@ namespace HealthJournal.Api.Features.JournalWeeks
     {
         public static RouteGroupBuilder MapUpdateJournalWeekDescription(this RouteGroupBuilder group)
         {
-            group.MapPatch("/{id}", async (DataContext context, IValidator<UpdateJournalWeekDto> validator, Guid id, UpdateJournalWeekDto input) =>
+            group.MapPatch("/{id}", async (
+                    DataContext context, 
+                    ILoggerFactory loggerFactory, 
+                    IValidator<UpdateJournalWeekDto> validator, 
+                    Guid id, 
+                    UpdateJournalWeekDto input) =>
                 {
+                    var logger = loggerFactory.CreateLogger("UpdateJournalWeekDescriptionEndpoint");
+
                     var validationResult = await validator.ValidateAsync(input);
                     if (!validationResult.IsValid)
                     {
@@ -25,6 +32,9 @@ namespace HealthJournal.Api.Features.JournalWeeks
 
                     context.JournalUsers.Update(user);
                     await context.SaveChangesAsync();
+
+                    logger.LogInformation("Updated journal week description with ID {Id}", id);
+
                     return Results.NoContent();
                 })
                 .WithName("UpdateJournalWeek")
