@@ -1,3 +1,4 @@
+global using HealthJournal.Api;
 global using FluentValidation;
 
 global using HealthJournal.Api.Domain.Journal;
