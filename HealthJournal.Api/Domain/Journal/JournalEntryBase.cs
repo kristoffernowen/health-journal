@@ -16,9 +16,8 @@ public abstract class JournalEntryBase : EntityBase
         ArgumentException.ThrowIfNullOrWhiteSpace(title);
         return title.Length switch
         {
-            < 3 => throw new ArgumentException("Title must be at least 3 characters long."),
-            > MaxTitleLength => throw new ArgumentException(
-                $"Title cannot be longer than {MaxTitleLength} characters."),
+            < 3 => throw new TitleTooShortException(title),
+            > MaxTitleLength => throw new TitleTooLongException(title, MaxTitleLength),
             _ => title
         };
     }
@@ -28,9 +27,8 @@ public abstract class JournalEntryBase : EntityBase
         ArgumentException.ThrowIfNullOrWhiteSpace(description);
         return description.Length switch
         {
-            < 3 => throw new ArgumentException("Description must be at least 3 characters long."),
-            > MaxContentLength => throw new ArgumentException(
-                $"Description cannot be longer than {MaxContentLength} characters."),
+            < 3 => throw new DescriptionTooShortException("Description must be at least 3 characters long."),
+            > MaxContentLength => throw new DescriptionTooLongException($"Description cannot be longer than {MaxContentLength} characters."),
             _ => description
         };
     }

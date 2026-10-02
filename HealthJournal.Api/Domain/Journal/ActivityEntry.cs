@@ -20,7 +20,7 @@ public class ActivityEntry : JournalEntryBase
     {
         if (start != end)
         {
-            throw new ArgumentException("For ActivityEntry, start and end dates must be the same.");
+            throw new ActivityStartEndMismatchException("For ActivityEntry, start and end dates must be the same.");
         }
         base.Update(title, description, null, null);
         PerformedAt = start ?? PerformedAt;

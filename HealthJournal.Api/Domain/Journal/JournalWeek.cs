@@ -31,7 +31,7 @@ public class JournalWeek : EntityBase
     {
         if (!WeekOfYear.Contains(entry.Start) && !WeekOfYear.Contains(entry.End))
         {
-            throw new ArgumentException("Entry date is not within the week.");
+            throw new EntryOutsideWeekException(entry.Start, entry.End, WeekOfYear);
         }
         entry.JournalWeek = this;
         entry.JournalWeekId = Id;
@@ -43,16 +43,16 @@ public class JournalWeek : EntityBase
         var entry = Entries.FirstOrDefault(e => e.Id == entryId);
         if (entry == null)
         {
-            throw new ArgumentException("Entry not found in the week.");
+            throw new EntryNotFoundException($"Entry with ID {entryId} not found in week.");
         }
 
         if (start.HasValue && !WeekOfYear.Contains(start.Value))
         {
-            throw new ArgumentException("Start date is not within the week.");
+            throw new EntryOutsideWeekException(start.Value, end ?? entry.End, WeekOfYear); //should work but may produce funny message
         }
         if (end.HasValue && !WeekOfYear.Contains(end.Value))
         {
-            throw new ArgumentException("End date is not within the week.");
+            throw new EntryOutsideWeekException(start ?? entry.Start, end.Value, WeekOfYear); //should work but may produce funny message
         }
 
         entry.Update(title, description, start, end);
@@ -62,8 +62,8 @@ public class JournalWeek : EntityBase
     {
         return description.Length switch
         {
-            < 3 => throw new ArgumentException("Description must be at least 3 characters long."),
-            > 1000 => throw new ArgumentException("Description cannot be longer than 1000 characters."),
+            < 3 => throw new DescriptionTooShortException("Description must be at least 3 characters long."),
+            > 1000 => throw new DescriptionTooLongException("Description cannot be longer than 1000 characters."),
             _ => description
         };
     }
