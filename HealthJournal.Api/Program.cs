@@ -30,8 +30,8 @@ try
 
     app.MapEndpoints();
 
-    app.UseSerilogRequestLogging();
-
+    app.UseConfiguredSerilogRequestLogging();
+    
     Log.Information("Application started successfully");
 
     app.Run();

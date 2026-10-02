@@ -14,3 +14,4 @@ global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Serilog;
 
 global using HealthJournal.Api.Domain.Exceptions;
+global using Serilog.Events;

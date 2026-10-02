@@ -2,29 +2,49 @@ namespace HealthJournal.Api;
 
 public static class ProgramAppExtensions
 {
-    public static WebApplication MapEndpoints(this WebApplication app)
+    extension(WebApplication app)
     {
-        var journalWeek = app.MapGroup("/journal-weeks")
-            .WithTags("Journal Weeks")
-            .WithGroupName("Journal Weeks")
-            .WithDescription("Endpoints for managing journal weeks and journal entries in week views");
+        public WebApplication UseConfiguredSerilogRequestLogging()
+        {
+            app.UseSerilogRequestLogging(options =>
+            {
+                options.GetLevel = (httpContext, elapsed, exception) =>
+                {
+                    return exception switch
+                    {
+                        DomainException => LogEventLevel.Warning,
+                        not null => LogEventLevel.Error,
+                        _ => LogEventLevel.Information
+                    };
+                };
+            });
+            return app;
+        }
 
-        journalWeek.MapGetJournalWeeks();
-        journalWeek.MapGetJournalWeekById();
-        journalWeek.MapUpdateJournalWeekDescription();
+        public WebApplication MapEndpoints()
+        {
+            var journalWeek = app.MapGroup("/journal-weeks")
+                .WithTags("Journal Weeks")
+                .WithGroupName("Journal Weeks")
+                .WithDescription("Endpoints for managing journal weeks and journal entries in week views");
 
-        var journalEntry = app.MapGroup("/journal-entries")
-            .WithTags("Journal Entries")
-            .WithGroupName("Journal Entries")
-            .WithDescription("Endpoints for managing journal entries regardless of weeks");
-        // per type of entry, we can have different endpoints for creating and updating them, but the retrieval and deletion can be generic
-        journalEntry.MapCreateActivityEntry();
-        journalEntry.MapUpdateActivityEntry();
+            journalWeek.MapGetJournalWeeks();
+            journalWeek.MapGetJournalWeekById();
+            journalWeek.MapUpdateJournalWeekDescription();
 
-        journalEntry.MapGetJournalEntry();
-        journalEntry.MapGetJournalEntries();
-        journalEntry.MapDeleteJournalEntry();
+            var journalEntry = app.MapGroup("/journal-entries")
+                .WithTags("Journal Entries")
+                .WithGroupName("Journal Entries")
+                .WithDescription("Endpoints for managing journal entries regardless of weeks");
+            // per type of entry, we can have different endpoints for creating and updating them, but the retrieval and deletion can be generic
+            journalEntry.MapCreateActivityEntry();
+            journalEntry.MapUpdateActivityEntry();
 
-        return app;
+            journalEntry.MapGetJournalEntry();
+            journalEntry.MapGetJournalEntries();
+            journalEntry.MapDeleteJournalEntry();
+
+            return app;
+        }
     }
 }
