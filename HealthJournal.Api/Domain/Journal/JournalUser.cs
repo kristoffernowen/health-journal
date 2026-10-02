@@ -37,7 +37,11 @@ public class JournalUser : EntityBase
 
     public void UpdateWeekDescription(Guid id, string? description)
     {
-        var week = JournalWeeks.First(jw => jw.Id == id);
+        var week = JournalWeeks.FirstOrDefault(jw => jw.Id == id);
+        if (week == null)
+        {
+            throw new EntryNotFoundException($"Week with ID {id} not found.");
+        }
         week.UpdateDescription(description);
     }
 

@@ -5,33 +5,19 @@ public static class UpdateJournalWeekDescriptionEndpoint
     public static RouteGroupBuilder MapUpdateJournalWeekDescription(this RouteGroupBuilder group)
     {
         group.MapPatch("/{id}", async (
-                DataContext context,
-                ILoggerFactory loggerFactory,
+                IJournalWeekService journalWeekService,
                 IValidator<UpdateJournalWeekDto> validator,
                 Guid id,
                 UpdateJournalWeekDto input) =>
             {
-                var logger = loggerFactory.CreateLogger("UpdateJournalWeekDescriptionEndpoint");
-
                 var validationResult = await validator.ValidateAsync(input);
                 if (!validationResult.IsValid)
                 {
                     return Results.ValidationProblem(validationResult.ToDictionary());
                 }
 
-                var fakeUser = FakeUserProvider.LoggedInDummy();
-                var user = await context.JournalUsers
-                    .Include(u => u.JournalWeeks)
-                    .FirstAsync(u => u.ExtUserId == fakeUser.ExtUserId);
-
-                user.UpdateWeekDescription(id, input.Description);
-
-                context.JournalUsers.Update(user);
-                await context.SaveChangesAsync();
-
-                logger.LogInformation("Updated journal week description with ID {Id}", id);
-
-                return Results.NoContent();
+                var updated = await journalWeekService.UpdateJournalWeekDescriptionAsync(id, input.Description);
+                return updated ? Results.NoContent() : Results.NotFound();
             })
             .WithName("UpdateJournalWeek")
             .Produces(StatusCodes.Status204NoContent);

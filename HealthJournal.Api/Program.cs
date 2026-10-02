@@ -15,7 +15,7 @@ try
         .ReadFrom.Configuration(builder.Configuration)); // using ILoggerFactory in endpoints till handlers are in place
 
     builder.Services.AddPersistence(builder.Configuration);
-
+    builder.Services.AddApplicationServices();
     builder.Services.AddValidatorsFromAssemblyContaining<CreateActivityEntryValidator>(ServiceLifetime.Transient);
 
     builder.Services.AddOpenApi();

@@ -6,6 +6,7 @@ public static class GetJournalEntryEndpoint
     {
         group.MapGet("/{id:guid}", async (DataContext context, Guid id) =>
             {
+                //needs user checking, but for now just return the entry if it exists
                 var journalEntry = await context.JournalEntries.FindAsync(id);
                 if (journalEntry == null)
                 {

@@ -2,16 +2,25 @@ namespace HealthJournal.Api;
 
 public static class ProgramServicesExtensions
 {
-    public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        var connectionString = configuration.GetConnectionString("Postgres");
-        services.AddDbContext<DataContext>(opt =>
-            opt.UseNpgsql(connectionString, npgsqlOptions =>
-                npgsqlOptions.EnableRetryOnFailure(
-                    maxRetryCount: 1,
-                    maxRetryDelay: TimeSpan.FromSeconds(10),
-                    errorCodesToAdd: null)));
+        public IServiceCollection AddPersistence(IConfiguration configuration)
+        {
+            var connectionString = configuration.GetConnectionString("Postgres");
+            services.AddDbContext<DataContext>(opt =>
+                opt.UseNpgsql(connectionString, npgsqlOptions =>
+                    npgsqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 1,
+                        maxRetryDelay: TimeSpan.FromSeconds(10),
+                        errorCodesToAdd: null)));
 
-        return services;
+            return services;
+        }
+
+        public IServiceCollection AddApplicationServices()
+        {
+            services.AddScoped<IJournalWeekService, JournalWeekService>();
+            return services;
+        }
     }
 }
