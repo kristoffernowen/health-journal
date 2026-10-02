@@ -8,9 +8,11 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+    builder.Services.AddProblemDetails();
+
     builder.Services.AddSerilog((lc) => lc
-        .ReadFrom.Configuration(builder.Configuration)
-        ); // using ILoggerFactory in endpoints till handlers are in place
+        .ReadFrom.Configuration(builder.Configuration)); // using ILoggerFactory in endpoints till handlers are in place
 
     builder.Services.AddPersistence(builder.Configuration);
 
@@ -23,6 +25,8 @@ try
     {
         app.MapOpenApi();
     }
+
+    app.UseExceptionHandler();
 
     app.MapEndpoints();
 
