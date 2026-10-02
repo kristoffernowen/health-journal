@@ -25,7 +25,11 @@ public class JournalUser : EntityBase
 
     public void RemoveEntry(Guid entryId)
     {
-        var week = JournalWeeks.First(jw => jw.Entries.Any(e => e.Id == entryId));
+        var week = JournalWeeks.FirstOrDefault(jw => jw.Entries.Any(e => e.Id == entryId));
+        if (week == null)
+        {
+            throw new EntryNotFoundException($"Entry with ID {entryId} not found in any week.");
+        }
 
         var entry = week.Entries.First(e => e.Id == entryId);
         week.Entries.Remove(entry);
