@@ -18,7 +18,7 @@ public class JournalUser : EntityBase
         var week = JournalWeeks.FirstOrDefault(jw => jw.Entries.Any(e => e.Id == entryId));
         if (week == null)
         {
-            throw new EntryNotFoundException($"Entry with ID {entryId} not found in any week.");
+            throw new EntryNotFoundException($"Week containing entry with ID {entryId} not found.");
         }
         week.UpdateEntry(entryId, title, description, start, end);
     }
@@ -28,10 +28,11 @@ public class JournalUser : EntityBase
         var week = JournalWeeks.FirstOrDefault(jw => jw.Entries.Any(e => e.Id == entryId));
         if (week == null)
         {
-            throw new EntryNotFoundException($"Entry with ID {entryId} not found in any week.");
+            throw new EntryNotFoundException($"Week containing entry with ID {entryId} not found.");
         }
 
         var entry = week.Entries.First(e => e.Id == entryId);
+        
         week.Entries.Remove(entry);
     }
 
