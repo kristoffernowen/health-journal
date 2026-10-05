@@ -20,6 +20,7 @@ public static class ProgramServicesExtensions
         public IServiceCollection AddApplicationServices()
         {
             services.AddScoped<IJournalWeekService, JournalWeekService>();
+            services.AddScoped<IJournalEntryService, JournalEntryService>();
             return services;
         }
     }

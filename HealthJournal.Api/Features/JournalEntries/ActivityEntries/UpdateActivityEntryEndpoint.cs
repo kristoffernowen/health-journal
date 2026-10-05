@@ -7,34 +7,18 @@ public static class UpdateActivityEntryEndpoint
     public static RouteGroupBuilder MapUpdateActivityEntry(this RouteGroupBuilder group)
     {
         group.MapPatch("/{id:guid}", async (
-                DataContext context,
-                ILoggerFactory loggerFactory,
+                IJournalEntryService journalEntryService,
                 IValidator<InputUpdateActivityEntryDto> validator,
                 Guid id,
                 InputUpdateActivityEntryDto input) =>
             {
-                var logger = loggerFactory.CreateLogger("UpdateActivityEntryEndpoint");
-
                 var validationResult = await validator.ValidateAsync(input);
                 if (!validationResult.IsValid)
                 {
                     return Results.ValidationProblem(validationResult.ToDictionary());
                 }
 
-                var fakeUser = FakeUserProvider.LoggedInDummy();
-                var user = await context.JournalUsers
-                    .Include(u => u.JournalWeeks)
-                    .ThenInclude(jw => jw.Entries)
-                    .AsSplitQuery()
-                    .FirstOrDefaultAsync(u => u.ExtUserId == fakeUser.ExtUserId);
-
-                Debug.Assert(user != null, nameof(user) + " != null");
-                user.UpdateEntry(id, input.Title, input.Description, input.PerformedAt, input.PerformedAt);
-
-                context.JournalUsers.Update(user);
-                await context.SaveChangesAsync();
-
-                logger.LogInformation("Updated activity entry with ID {Id}", id);
+                await journalEntryService.UpdateJournalEntryAsync(id, input);
 
                 return Results.NoContent();
             })

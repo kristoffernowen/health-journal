@@ -4,24 +4,17 @@ public static class GetJournalEntryEndpoint
 {
     public static RouteGroupBuilder MapGetJournalEntry(this RouteGroupBuilder group)
     {
-        group.MapGet("/{id:guid}", async (DataContext context, Guid id) =>
+        group.MapGet("/{id:guid}", async (IJournalEntryService journalEntryService, Guid id) =>
             {
                 //needs user checking, but for now just return the entry if it exists
-                var journalEntry = await context.JournalEntries.FindAsync(id);
+                var journalEntry = await journalEntryService.GetJournalEntryAsync(id);
                 if (journalEntry == null)
                 {
                     return Results.NotFound();
                 }
 
                 return Results.Ok(
-                    new OutputGetJournalEntryDto(
-                        journalEntry.Id,
-                        journalEntry.Title,
-                        journalEntry.Description,
-                        journalEntry.Start,
-                        journalEntry.End,
-                        journalEntry.GetType().Name,
-                        journalEntry.CreatedAt));
+                    journalEntry);
             })
             .WithName("GetJournalEntry");
         return group;
@@ -29,3 +22,18 @@ public static class GetJournalEntryEndpoint
 }
 
 public record OutputGetJournalEntryDto(Guid Id, string Title, string Description, DateOnly Start, DateOnly End, string Type, DateTime CreatedAt);
+
+public static class OutputGetJournalEntryDtoExtensions
+{
+    public static OutputGetJournalEntryDto ToOutputGetJournalEntryDto(this JournalEntryBase journalEntry)
+    {
+        return new OutputGetJournalEntryDto(
+            journalEntry.Id,
+            journalEntry.Title,
+            journalEntry.Description,
+            journalEntry.Start,
+            journalEntry.End,
+            journalEntry.GetType().Name,
+            journalEntry.CreatedAt);
+    }
+}

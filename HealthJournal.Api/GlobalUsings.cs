@@ -15,3 +15,4 @@ global using Serilog;
 
 global using HealthJournal.Api.Domain.Exceptions;
 global using Serilog.Events;
+global using HealthJournal.Api.Features.JournalEntries.Service;

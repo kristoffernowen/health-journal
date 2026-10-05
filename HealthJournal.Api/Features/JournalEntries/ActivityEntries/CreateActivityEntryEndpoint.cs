@@ -5,42 +5,19 @@ public static class CreateActivityEntryEndpoint
     public static RouteGroupBuilder MapCreateActivityEntry(this RouteGroupBuilder group)
     {
         group.MapPost("/activity", async (
-                DataContext context,
-                ILoggerFactory loggerFactory,
+                IJournalEntryService journalEntryService,
                 IValidator<InputCreateActivityEntryDto> validator,
                 InputCreateActivityEntryDto input) =>
             {
-                var logger = loggerFactory.CreateLogger("CreateActivityEntryEndpoint");
-
                 var validationResult = await validator.ValidateAsync(input);
                 if (!validationResult.IsValid)
                 {
                     return Results.ValidationProblem(validationResult.ToDictionary());
                 }
 
-                var fakeUser = FakeUserProvider.LoggedInDummy();
-                var user = await context.JournalUsers
-                    .Include(u => u.JournalWeeks)
-                    .ThenInclude(jw => jw.Entries)
-                    .AsSplitQuery()
-                    .FirstOrDefaultAsync(u => u.Id == fakeUser.Id);
+                var journalEntry = await journalEntryService.CreateJournalEntryAsync(input);
 
-                if (user == null)
-                {
-                    return Results.NotFound();
-                }
-
-                var journalEntry = ActivityEntry.Create(input.Title, input.Description, input.PerformedAt);
-                user.AddEntry(journalEntry);
-
-                context.ActivityEntries.Add(journalEntry);
-                await context.SaveChangesAsync();
-
-                logger.LogInformation("Created activity entry with ID {JournalEntryId}", journalEntry.Id);
-
-                return Results.Created($"/journal-entries/{journalEntry.Id}",
-                    new OutputCreateActivityEntryDto(journalEntry.Id, journalEntry.Title, journalEntry.Description,
-                        journalEntry.CreatedAt, journalEntry.PerformedAt));
+                return Results.Created($"/journal-entries/{journalEntry.Id}", journalEntry);
             })
             .WithName("CreateJournalEntry");
         return group;
@@ -48,6 +25,14 @@ public static class CreateActivityEntryEndpoint
 }
 
 public record OutputCreateActivityEntryDto(Guid Id, string Title, string Description, DateTime CreatedAt, DateOnly PerformedAt);
+
+public static class OutputCreateActivityEntryDtoExtensions
+{
+    public static OutputCreateActivityEntryDto ToOutputCreateActivityEntryDto(this ActivityEntry entry)
+    {
+        return new OutputCreateActivityEntryDto(entry.Id, entry.Title, entry.Description, entry.CreatedAt, entry.PerformedAt);
+    }
+}
 
 public record InputCreateActivityEntryDto(string Title, string Description, DateOnly PerformedAt);
 

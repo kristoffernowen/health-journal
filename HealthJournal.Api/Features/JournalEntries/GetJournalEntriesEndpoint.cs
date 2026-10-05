@@ -4,18 +4,10 @@ public static class GetJournalEntriesEndpoint
 {
     public static RouteGroupBuilder MapGetJournalEntries(this RouteGroupBuilder group)
     {
-        group.MapGet("/", async (DataContext context) =>
+        group.MapGet("/", async (IJournalEntryService journalEntryService) =>
             {
-                var user = FakeUserProvider.LoggedInDummy();
-                var journalEntries = await context.JournalUsers.Include(u => u.JournalWeeks)
-                    .ThenInclude(jw => jw.Entries)
-                    .Where(u => u.Id == user.Id)
-                    .SelectMany(u => u.JournalWeeks)
-                    .SelectMany(jw => jw.Entries)
-                    .ToListAsync();
-                var output = journalEntries.Select(
-                    j => new OutputGetJournalEntriesDto(j.Id, j.Title, j.Description, j.GetType().Name, j.CreatedAt));
-                return Results.Ok(output);
+                var journalEntries = await journalEntryService.GetJournalEntriesAsync();
+                return Results.Ok(journalEntries);
             })
             .WithName("GetJournalEntries");
         return group;
