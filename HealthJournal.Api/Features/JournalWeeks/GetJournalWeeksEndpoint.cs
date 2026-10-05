@@ -7,9 +7,8 @@ public static class GetJournalWeeksEndpoint
         group.MapGet("/", async (IJournalWeekService journalWeekService) =>
             {
                 var journalWeeks = await journalWeekService.GetAllJournalWeeksAsync();
-                var output = journalWeeks.Select(jw => jw.ToOutputGetJournalWeekDto()).ToList();
                 
-                return Results.Ok(output);
+                return Results.Ok(journalWeeks);
             })
             .WithName("GetJournalWeeks");
         return group;

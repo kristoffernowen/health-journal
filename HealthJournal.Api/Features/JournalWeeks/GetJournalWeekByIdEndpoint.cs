@@ -7,12 +7,8 @@ public static class GetJournalWeekByIdEndpoint
         group.MapGet("/{id:guid}", async (Guid id, IJournalWeekService journalWeekService) =>
         {
             var journalWeek = await journalWeekService.GetJournalWeekAsync(id);
-            if (journalWeek == null)
-            {
-                return Results.NotFound();
-            }
-            var output = journalWeek.ToOutputGetJournalWeekByIdDto();
-            return Results.Ok(output);
+            
+            return journalWeek != null ? Results.Ok(journalWeek) : Results.NotFound();
         })
         .WithName("GetJournalWeekById");
         return group;
