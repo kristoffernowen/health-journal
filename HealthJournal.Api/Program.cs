@@ -12,7 +12,7 @@ try
     builder.Services.AddProblemDetails();
 
     builder.Services.AddSerilog((lc) => lc
-        .ReadFrom.Configuration(builder.Configuration)); // using ILoggerFactory in endpoints till handlers are in place
+        .ReadFrom.Configuration(builder.Configuration));
 
     builder.Services.AddPersistence(builder.Configuration);
     builder.Services.AddApplicationServices();
@@ -26,6 +26,8 @@ try
     if (app.Environment.IsDevelopment())
     {
         app.MapOpenApi();
+        var diagnostic = app.MapGroup("/diagnostic");
+        diagnostic.MapDiagnosticEndpoints();
     }
 
     app.UseConfiguredSerilogRequestLogging();

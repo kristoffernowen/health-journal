@@ -37,7 +37,9 @@ public static class ProgramServicesExtensions
                     policy => policy.RequireClaim(
                         "permissions", "journal:write"));
 
-                
+                options.AddPolicy("Diagnose",
+                    policy => policy.RequireClaim(
+                        "permissions", "diagnose"));
             });
             
             return services;
