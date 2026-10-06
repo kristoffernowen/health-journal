@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace HealthJournal.Api.Features.JournalEntries.ActivityEntries;
 
 public static class UpdateActivityEntryEndpoint
@@ -22,6 +20,7 @@ public static class UpdateActivityEntryEndpoint
 
                 return Results.NoContent();
             })
+            .RequireAuthorization("JournalWrite")
             .WithName("UpdateJournalEntry");
         return group;
     }

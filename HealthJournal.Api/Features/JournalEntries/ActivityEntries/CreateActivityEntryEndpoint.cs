@@ -19,6 +19,7 @@ public static class CreateActivityEntryEndpoint
 
                 return Results.Created($"/journal-entries/{journalEntry.Id}", journalEntry);
             })
+            .RequireAuthorization("JournalWrite")
             .WithName("CreateJournalEntry");
         return group;
     }

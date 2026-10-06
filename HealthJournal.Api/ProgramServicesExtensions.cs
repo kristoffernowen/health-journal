@@ -23,5 +23,24 @@ public static class ProgramServicesExtensions
             services.AddScoped<IJournalEntryService, JournalEntryService>();
             return services;
         }
+
+        public IServiceCollection AddAuth0(IConfiguration configuration)
+        {
+            services.AddAuth0ApiAuthentication(configuration.GetSection("Auth0"));
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("JournalRead",
+                    policy => policy.RequireClaim(
+                        "permissions", "journal:read"));
+
+                options.AddPolicy("JournalWrite",
+                    policy => policy.RequireClaim(
+                        "permissions", "journal:write"));
+
+                
+            });
+            
+            return services;
+        }
     }
 }

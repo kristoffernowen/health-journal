@@ -10,6 +10,7 @@ public static class GetJournalWeeksEndpoint
                 
                 return Results.Ok(journalWeeks);
             })
+            .RequireAuthorization("JournalRead")
             .WithName("GetJournalWeeks");
         return group;
     }

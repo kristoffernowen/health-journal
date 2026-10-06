@@ -16,6 +16,7 @@ public static class GetJournalEntryEndpoint
                 return Results.Ok(
                     journalEntry);
             })
+            .RequireAuthorization("JournalRead")
             .WithName("GetJournalEntry");
         return group;
     }

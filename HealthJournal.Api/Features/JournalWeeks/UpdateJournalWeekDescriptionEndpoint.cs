@@ -19,6 +19,7 @@ public static class UpdateJournalWeekDescriptionEndpoint
                 var updated = await journalWeekService.UpdateJournalWeekDescriptionAsync(id, input.Description);
                 return updated ? Results.NoContent() : Results.NotFound();
             })
+            .RequireAuthorization("JournalWrite")
             .WithName("UpdateJournalWeek")
             .Produces(StatusCodes.Status204NoContent);
         return group;

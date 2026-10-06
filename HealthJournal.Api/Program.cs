@@ -2,7 +2,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .CreateBootstrapLogger();
 
-Log.Information("Starting.");
+Log.Information("Bootstrapping application.");
 
 try
 {
@@ -18,6 +18,8 @@ try
     builder.Services.AddApplicationServices();
     builder.Services.AddValidatorsFromAssemblyContaining<CreateActivityEntryValidator>(ServiceLifetime.Transient);
 
+    builder.Services.AddAuth0(builder.Configuration);
+
     builder.Services.AddOpenApi();
     var app = builder.Build();
 
@@ -26,13 +28,13 @@ try
         app.MapOpenApi();
     }
 
+    app.UseConfiguredSerilogRequestLogging();
     app.UseExceptionHandler();
-
+    app.UseAuthentication();
+    app.UseAuthorization();
     app.MapEndpoints();
 
-    app.UseConfiguredSerilogRequestLogging();
-    
-    Log.Information("Application started successfully");
+    Log.Information("Application pipeline configured.");
 
     app.Run();
 }

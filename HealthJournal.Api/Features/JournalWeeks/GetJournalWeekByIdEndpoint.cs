@@ -10,6 +10,7 @@ public static class GetJournalWeekByIdEndpoint
             
             return journalWeek != null ? Results.Ok(journalWeek) : Results.NotFound();
         })
+        .RequireAuthorization("JournalRead")
         .WithName("GetJournalWeekById");
         return group;
     }

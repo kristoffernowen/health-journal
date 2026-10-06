@@ -16,3 +16,5 @@ global using Serilog;
 global using HealthJournal.Api.Domain.Exceptions;
 global using Serilog.Events;
 global using HealthJournal.Api.Features.JournalEntries.Service;
+global using Auth0.AspNetCore.Authentication.Api;
+global using HealthJournal.Api.DiagnosticFeature;

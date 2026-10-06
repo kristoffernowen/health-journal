@@ -12,6 +12,7 @@ public static class DeleteJournalEntryEndpoint
 
                 return Results.NoContent();
             })
+            .RequireAuthorization("JournalWrite")
             .WithName("DeleteJournalEntry");
         return group;
     }

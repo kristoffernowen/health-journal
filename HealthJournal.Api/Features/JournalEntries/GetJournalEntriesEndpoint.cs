@@ -9,7 +9,8 @@ public static class GetJournalEntriesEndpoint
                 var journalEntries = await journalEntryService.GetJournalEntriesAsync();
                 return Results.Ok(journalEntries);
             })
-            .WithName("GetJournalEntries");
+            .WithName("GetJournalEntries")
+            .RequireAuthorization("JournalRead");
         return group;
     }
 }
